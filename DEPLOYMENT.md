@@ -35,33 +35,32 @@ git push -u origin main
 
 ## Step 3: Add Environment Variables in Vercel
 
-Go to Project Settings → Environment Variables and add:
+Go to Project Settings → Environment Variables and add all variables from your `.env.local` file:
 
 ```
 # Supabase (REQUIRED)
-NEXT_PUBLIC_SUPABASE_URL=https://kuacpgsfwlxdvmbhbcet.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1YWNwZ3Nmd2x4ZHZtYmhiY2V0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMjIyMjQsImV4cCI6MjA3NTY5ODIyNH0.gQceGudRKBLfiC3BVZTAmRrDa-OJK4Z851UHutBHI1I
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1YWNwZ3Nmd2x4ZHZtYmhiY2V0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDEyMjIyNCwiZXhwIjoyMDc1Njk4MjI0fQ.sdKqX38C1DJzmrdXABI1XutQDG2ofZB14QZBk3cKxKw
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 # Inlomax API (REQUIRED)
-INLOMAX_API_KEY=vp5sh8evbcxcf81r3wrrbm0p26y5xl9r8yw4eatl
+INLOMAX_API_KEY=your_inlomax_api_key
 INLOMAX_SANDBOX=true
 
 # Flutterwave (REQUIRED for payments)
-# For production, get LIVE keys from Flutterwave dashboard
-FLUTTERWAVE_PUBLIC_KEY=FLWPUBK_TEST-ffdcb5a0eddc39635b932714c21f3985-X
-FLUTTERWAVE_SECRET_KEY=FLWSECK_TEST-734645e90a07c84695b42e0cf46a8e33-X
-FLUTTERWAVE_WEBHOOK_SECRET=your_webhook_secret_here
+FLUTTERWAVE_PUBLIC_KEY=your_flutterwave_public_key
+FLUTTERWAVE_SECRET_KEY=your_flutterwave_secret_key
+FLUTTERWAVE_WEBHOOK_SECRET=your_webhook_secret
 
 # NextAuth
 NEXTAUTH_URL=https://tadavtu.com
-NEXTAUTH_SECRET=generate_a_random_32_char_string_here
+NEXTAUTH_SECRET=generate_a_random_32_char_string
 ```
 
-**Important:** Generate a secure NEXTAUTH_SECRET using:
-```bash
-openssl rand -base64 32
-```
+**Important:** 
+- Copy the actual values from your `.env.local` file
+- Generate a secure NEXTAUTH_SECRET using: `openssl rand -base64 32`
+- NEVER commit real API keys to GitHub!
 
 ---
 
