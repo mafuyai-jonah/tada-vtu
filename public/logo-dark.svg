@@ -1,0 +1,20 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon: Stylized "T" with signal waves -->
+  <g id="icon">
+    <!-- Rounded square background -->
+    <rect x="4" y="10" width="40" height="40" rx="10" fill="#22c55e"/>
+    
+    <!-- Letter T -->
+    <path d="M14 20H34V26H27V40H21V26H14V20Z" fill="white"/>
+    
+    <!-- Signal waves (right side) -->
+    <path d="M36 24C38 24 40 26 40 28" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <path d="M36 20C41 20 44 24 44 28" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+  </g>
+  
+  <!-- Text: TADA (white for dark backgrounds) -->
+  <g id="text">
+    <text x="52" y="38" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#22c55e">TADA</text>
+    <text x="130" y="38" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="400" fill="#ffffff">VTU</text>
+  </g>
+</svg>
