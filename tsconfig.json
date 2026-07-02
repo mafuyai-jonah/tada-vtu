@@ -41,6 +41,7 @@
     "eve-agent",
     "src/scripts",
     "src/lib/whatsapp/supabase-auth.ts",
-    "services"
+    "services",
+    "mobile"
   ]
 }
