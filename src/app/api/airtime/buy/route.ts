@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { purchaseAirtime, ServiceUnavailableError } from '@/lib/api/inlomax';
 import { coreDebit, coreRefund } from '@/lib/api/core';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
+import { isMaintenanceMode, getMaintenanceStatus } from '@/lib/system-settings';
 
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -41,6 +42,16 @@ export async function POST(request: NextRequest) {
     const coreSecretHeader = request.headers.get('x-core-secret');
     const expectedCoreSecret = process.env.CORE_SECRET;
     const isTrustedAgent = expectedCoreSecret && coreSecretHeader === expectedCoreSecret;
+
+    // Maintenance mode blocks web-app purchases only — Eve/WhatsApp (trusted
+    // agent callers) keep working during a shutdown.
+    if (!isTrustedAgent && (await isMaintenanceMode())) {
+      const { message } = await getMaintenanceStatus();
+      return NextResponse.json(
+        { status: false, message: message || 'TADAPAY is temporarily closed for maintenance.' },
+        { status: 503 }
+      );
+    }
 
     // If the caller is not a trusted agent, the userId MUST match a valid
     // Supabase session. We enforce this by checking the Supabase JWT in the

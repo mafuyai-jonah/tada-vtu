@@ -6,6 +6,7 @@ import { AuthGuard } from "@/components/auth-guard";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { CreatePinModal } from "@/components/create-pin-modal";
+import { MaintenanceGate } from "@/components/maintenance-gate";
 import {
   DashboardSidebar,
   DashboardBottomNav,
@@ -44,7 +45,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       {/* lg:pl-64 offsets content for the 64 (16rem) sidebar width */}
       {/* pb-20 ensures content isn't hidden behind mobile bottom nav */}
       <main className="lg:pl-64 min-h-screen pb-20 lg:pb-8 transition-all duration-200">
-        {children}
+        <MaintenanceGate>{children}</MaintenanceGate>
       </main>
 
       {/* Mobile Bottom Navigation - Hidden on desktop via CSS in component */}

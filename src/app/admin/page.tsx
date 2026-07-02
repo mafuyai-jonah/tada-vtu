@@ -93,6 +93,8 @@ export default function AdminDashboard() {
   const [usersLoading, setUsersLoading] = useState(false);
   const [transactionsLoading, setTransactionsLoading] = useState(false);
   const [inlomaxBalance, setInlomaxBalance] = useState<number | null>(null);
+  const [maintenanceActive, setMaintenanceActive] = useState(false);
+  const [maintenanceLoading, setMaintenanceLoading] = useState(false);
   const [userModal, setUserModal] = useState<UserModalState>({
     isOpen: false, user: null, action: null, amount: '', reason: '', loading: false,
   });
@@ -143,7 +145,46 @@ export default function AdminDashboard() {
     if (!token || !adminData) { router.push('/admin/login'); return; }
     setAdmin(JSON.parse(adminData));
     fetchData(token);
+    fetchMaintenanceStatus(token);
   }, [router]);
+
+  const fetchMaintenanceStatus = async (token: string) => {
+    try {
+      const res = await fetch('/api/admin/maintenance', { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      if (res.ok) setMaintenanceActive(!!data.active);
+    } catch { }
+  };
+
+  const toggleMaintenance = async () => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) return;
+    const next = !maintenanceActive;
+    const confirmMsg = next
+      ? 'Shut down TADAPAY for maintenance? Deposits and purchases will be blocked on the web app. Withdrawals stay active.'
+      : 'Reopen TADAPAY? Deposits and purchases will be available again.';
+    if (!window.confirm(confirmMsg)) return;
+
+    setMaintenanceLoading(true);
+    try {
+      const res = await fetch('/api/admin/maintenance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ active: next }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMaintenanceActive(!!data.active);
+        toast.success(next ? 'Maintenance mode is now ON' : 'Maintenance mode is now OFF');
+      } else {
+        toast.error(data.error || 'Failed to update maintenance mode');
+      }
+    } catch {
+      toast.error('Network error');
+    } finally {
+      setMaintenanceLoading(false);
+    }
+  };
 
   const fetchData = async (token: string, opts?: { usersPage?: number; transactionsPage?: number }) => {
     if (!opts) setLoading(true);
@@ -276,6 +317,22 @@ export default function AdminDashboard() {
               <span className="text-white font-semibold">Admin Panel</span>
             </div>
             <div className="flex items-center gap-4">
+              {maintenanceActive && (
+                <span className="px-2 py-1 rounded text-xs bg-red-500/20 text-red-400 border border-red-500/30">
+                  🔧 Maintenance Mode Active
+                </span>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleMaintenance}
+                disabled={maintenanceLoading}
+                className={maintenanceActive
+                  ? 'border-blue-500/30 text-blue-400 hover:bg-blue-500/10 hover:border-blue-500/50'
+                  : 'border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50'}
+              >
+                {maintenanceLoading ? 'Working...' : maintenanceActive ? '✅ Reopen TADAPAY' : '🛑 Shut Down for Maintenance'}
+              </Button>
               <span className="text-green-400/60 text-sm">{admin?.full_name}</span>
               <Button variant="outline" size="sm" onClick={handleLogout} className="border-green-500/30 text-green-400 hover:bg-green-500/10 hover:border-green-500/50">
                 Logout

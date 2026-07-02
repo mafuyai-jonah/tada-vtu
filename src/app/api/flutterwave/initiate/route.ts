@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { initiatePayment, calculateServiceCharge } from '@/lib/api/flutterwave';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
+import { isMaintenanceMode, getMaintenanceStatus } from '@/lib/system-settings';
 
 export async function POST(request: NextRequest) {
   try {
+    if (await isMaintenanceMode()) {
+      const { message } = await getMaintenanceStatus();
+      return NextResponse.json(
+        { status: 'error', message: message || 'TADAPAY is temporarily closed for maintenance.' },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
     const { amount, email, name, phone, redirect_url, meta } = body;
 
